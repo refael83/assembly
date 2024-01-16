@@ -50,11 +50,12 @@ insert_to_array:
        #blt  $t0,3,insert_to_array
        
        	la $a2,guess #address of guess array
-	la $a1,bool  #address of bool array   
+	   
 loop:
 	lb $t2,guess($t0) #t0 = guess[t3]
 	blt $t2, '0', invalid_guess_input
         bgt $t2, '9', invalid_guess_input
+        la $a1,bool  #address of bool array
 loop2:
 	lw $t1,0($a1) #t1 = bool[t4]
 	sub $t6,$t1,$t2
@@ -63,11 +64,13 @@ loop2:
 continu:
 	addi  $t4,$t4,1
 	addi  $a1,$a1,4
-	blt  $t4,2,loop2
-	
+	blt  $t4,3,loop2
+	sub $t4,$t4,$t4
 	addi $t3,$t3,1
 	addi $t0,$t0,1
-	blt $t3,2,loop	
+	blt $t3,3,loop
+	
+	blt $t7,3,get_guess	
 	
 	  # Exit the program
     li $v0, 10      # System call for exit
@@ -97,6 +100,7 @@ equal:
 print_b:
 	la $a0, b
     	li $v0,4
+    	addi $t7,$t7,1 #check if print b 3 time
     	syscall
     	j continu
 	       
