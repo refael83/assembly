@@ -9,6 +9,7 @@ msg1: .asciiz "\nPlease enter a decimal number   between 0 and 9:\n"
 msg2: .asciiz "Error: Invalid input. Please enter a valid number.\n"
 p: .asciiz  "p "
 b: .asciiz  "b "
+n: .asciiz "n "
 bool: .word 0,0,0
 guess:  .space 32
 input_guess: .space 32 
@@ -52,7 +53,7 @@ insert_to_array:
        	la $a2,guess #address of guess array
 	   
 loop:
-	lb $t2,guess($t0) #t0 = guess[t3]
+	lb $t2,guess($t3) #t0 = guess[t3]
 	blt $t2, '0', invalid_guess_input
         bgt $t2, '9', invalid_guess_input
         la $a1,bool  #address of bool array
@@ -62,10 +63,12 @@ loop2:
 	sub $t5,$t4,$t3
 	beqz $t6,equal
 continu:
-	addi  $t4,$t4,1
-	addi  $a1,$a1,4
+	addi $t4,$t4,1
+	addi $a1,$a1,4
 	blt  $t4,3,loop2
 	sub $t4,$t4,$t4
+continu2:
+	blt $t0,0,print_n
 	addi $t3,$t3,1
 	addi $t0,$t0,1
 	blt $t3,3,loop
@@ -103,4 +106,8 @@ print_b:
     	addi $t7,$t7,1 #check if print b 3 time
     	syscall
     	j continu
-	       
+print_n:
+	la $a0, n
+    	li $v0,4
+    	syscall
+    	j continu2
